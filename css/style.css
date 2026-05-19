@@ -1,57 +1,108 @@
+
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background: linear-gradient(to bottom right, #dffcf6, #c7f9f1);
     margin: 0;
     padding: 0;
+    color: #1f3b3b;
 }
 
 .container {
-    max-width: 600px;
-    margin: 50px auto;
+    max-width: 650px;
+    margin: 60px auto;
     background-color: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 6px 18px rgba(0, 128, 128, 0.15);
 }
 
 h1 {
     text-align: center;
+    color: #009688;
+    margin-bottom: 25px;
 }
 
 form {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
 }
 
 input {
-    padding: 12px;
+    padding: 14px;
     font-size: 16px;
+    border: 2px solid #b2f0e6;
+    border-radius: 10px;
+    background-color: #f8fffe;
+    transition: 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #26c6da;
+    box-shadow: 0 0 8px rgba(38, 198, 218, 0.3);
 }
 
 button {
-    padding: 12px;
+    padding: 14px;
     font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(to right, #26c6da, #4dd0e1);
+    color: white;
     cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: linear-gradient(to right, #00acc1, #26c6da);
+    transform: translateY(-2px);
 }
 
 .success {
-    color: green;
+    color: #00897b;
+    font-weight: bold;
+    margin-top: 10px;
 }
 
 .error {
-    color: red;
+    color: #e53935;
+    font-weight: bold;
+    margin-top: 10px;
 }
 
 .card {
-    background-color: #eef2ff;
-    padding: 15px;
-    margin-bottom: 12px;
-    border-radius: 8px;
+    background: linear-gradient(to right, #e0fffb, #f1fffd);
+    border-left: 6px solid #26c6da;
+    padding: 18px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 150, 136, 0.08);
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #00897b;
 }
 
 a {
     display: block;
-    margin-top: 20px;
+    margin-top: 25px;
     text-align: center;
+    text-decoration: none;
+    color: #0097a7;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+a:hover {
+    color: #006978;
+}
+
+@media (max-width: 700px) {
+    .container {
+        margin: 20px;
+        padding: 25px;
+    }
 }
