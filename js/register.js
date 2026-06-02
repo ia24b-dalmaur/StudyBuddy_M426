@@ -28,4 +28,8 @@ form.addEventListener("submit", function (event) {
 
     message.textContent = "Konto wurde erfolgreich erstellt.";
     message.className = "success";
+
+    setTimeout(function () {
+        window.location.href = "login.html";
+    }, 1000);
 });
