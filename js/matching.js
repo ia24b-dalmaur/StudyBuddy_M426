@@ -1,6 +1,7 @@
 protectPage();
 
 const partnerList = document.getElementById("partnerList");
+const matchButton = document.getElementById("matchButton");
 
 const testProfile = [
     {
@@ -29,11 +30,16 @@ const testProfile = [
     }
 ];
 
-const ownProfile = JSON.parse(localStorage.getItem(getProfileKey()));
+matchButton.addEventListener("click", function () {
+    partnerList.innerHTML = "";
 
-if (!ownProfile) {
-    partnerList.innerHTML = "<p class='error'>Bitte zuerst ein Lernprofil erstellen.</p>";
-} else {
+    const ownProfile = JSON.parse(localStorage.getItem(getProfileKey()));
+
+    if (!ownProfile) {
+        partnerList.innerHTML = "<p class='error'>Bitte zuerst ein Lernprofil erstellen.</p>";
+        return;
+    }
+
     const matches = testProfile
         .map(function (person) {
             const gemeinsameFaecher = person.faecher.filter(function (fach) {
@@ -51,19 +57,20 @@ if (!ownProfile) {
 
     if (matches.length === 0) {
         partnerList.innerHTML = "<p>Keine passenden Lernpartner:innen gefunden.</p>";
-    } else {
-        matches.forEach(function (person) {
-            const card = document.createElement("div");
-            card.className = "card";
-
-            card.innerHTML = `
-                <h2>${person.name}</h2>
-                <p><strong>Gemeinsame Fächer:</strong> ${person.gemeinsameFaecher.join(", ")}</p>
-                <p><strong>Interessen:</strong> ${person.interessen.join(", ")}</p>
-                <p><strong>Status:</strong> ${person.status}</p>
-            `;
-
-            partnerList.appendChild(card);
-        });
+        return;
     }
-}
+
+    matches.forEach(function (person) {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+            <h2>${person.name}</h2>
+            <p><strong>Gemeinsame Fächer:</strong> ${person.gemeinsameFaecher.join(", ")}</p>
+            <p><strong>Interessen:</strong> ${person.interessen.join(", ")}</p>
+            <p><strong>Status:</strong> ${person.status}</p>
+        `;
+
+        partnerList.appendChild(card);
+    });
+});
