@@ -1,12 +1,22 @@
+protectPage();
+
 const form = document.getElementById("profileForm");
 const message = document.getElementById("message");
 const output = document.getElementById("profileOutput");
+
+const savedProfile = JSON.parse(localStorage.getItem(getProfileKey()));
+
+if (savedProfile) {
+    fillForm(savedProfile);
+    showProfile(savedProfile);
+}
 
 form.addEventListener("submit", function (event) {
     event.preventDefault();
 
     const name = document.getElementById("name").value.trim();
     const klasse = document.getElementById("klasse").value.trim();
+
     const faecher = document.getElementById("faecher").value
         .split(",")
         .map(fach => fach.trim())
@@ -30,7 +40,7 @@ form.addEventListener("submit", function (event) {
         interessen: interessen
     };
 
-    localStorage.setItem("profile", JSON.stringify(profile));
+    localStorage.setItem(getProfileKey(), JSON.stringify(profile));
 
     message.textContent = "Profil wurde gespeichert.";
     message.className = "success";
@@ -38,18 +48,21 @@ form.addEventListener("submit", function (event) {
     showProfile(profile);
 });
 
-function showProfile(profile) {
-    output.innerHTML = `
-<h2>Gespeichertes Profil</h2>
-<p><strong>Name:</strong> ${profile.name}</p>
-<p><strong>Klasse:</strong> ${profile.klasse}</p>
-<p><strong>Fächer:</strong> ${profile.faecher.join(", ")}</p>
-<p><strong>Interessen:</strong> ${profile.interessen.join(", ")}</p>
-    `;
+function fillForm(profile) {
+    document.getElementById("name").value = profile.name;
+    document.getElementById("klasse").value = profile.klasse;
+    document.getElementById("faecher").value = profile.faecher.join(", ");
+    document.getElementById("interessen").value = profile.interessen.join(", ");
 }
 
-const savedProfile = JSON.parse(localStorage.getItem("profile"));
-
-if (savedProfile) {
-    showProfile(savedProfile);
+function showProfile(profile) {
+    output.innerHTML = `
+        <div class="card">
+            <h2>Gespeichertes Profil</h2>
+            <p><strong>Name:</strong> ${profile.name}</p>
+            <p><strong>Klasse:</strong> ${profile.klasse}</p>
+            <p><strong>Fächer:</strong> ${profile.faecher.join(", ")}</p>
+            <p><strong>Interessen:</strong> ${profile.interessen.join(", ")}</p>
+        </div>
+    `;
 }
