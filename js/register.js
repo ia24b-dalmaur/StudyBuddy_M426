@@ -1,35 +1,33 @@
-const form = document.getElementById("registerForm");
 const message = document.getElementById("message");
 
-form.addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    const email = document.getElementById("email").value.trim();
+function doRegister() {
+    const email    = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
 
-    if (email === "" || password === "") {
-        message.textContent = "Bitte E-Mail und Passwort eingeben.";
-        message.className = "error";
-        return;
+    if (!email || !password) {
+        showMsg("Bitte E-Mail und Passwort eingeben.", "error"); return;
     }
-
     if (!email.includes("@")) {
-        message.textContent = "Bitte eine gültige E-Mail eingeben.";
-        message.className = "error";
-        return;
+        showMsg("Bitte eine gültige E-Mail eingeben.", "error"); return;
+    }
+    if (password.length < 4) {
+        showMsg("Passwort muss mindestens 4 Zeichen haben.", "error"); return;
+    }
+    if (getUserByEmail(email)) {
+        showMsg("Diese E-Mail ist bereits registriert.", "error"); return;
     }
 
-    const user = {
-        email: email,
-        password: password
-    };
+    saveUser({ email, password });
+    showMsg("Konto erfolgreich erstellt! Weiterleitung...", "success");
+    setTimeout(() => window.location.href = "login.html", 1200);
+}
 
-    localStorage.setItem("user", JSON.stringify(user));
-
-    message.textContent = "Konto wurde erfolgreich erstellt.";
-    message.className = "success";
-
-    setTimeout(function () {
-        window.location.href = "login.html";
-    }, 1000);
+// Enter-Taste support
+document.addEventListener("keydown", e => {
+    if (e.key === "Enter") doRegister();
 });
+
+function showMsg(text, type) {
+    message.textContent = text;
+    message.className = "msg msg-" + type;
+}

@@ -2,30 +2,44 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Lernprofil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profil – StudyBuddy</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+<nav id="mainNav"></nav>
+
 <main class="container">
-    <h1>Lernprofil</h1>
+    <div class="card">
+        <h1>Mein Lernprofil</h1>
 
-    <form id="profileForm">
-        <input type="text" id="name" placeholder="Name">
-        <input type="text" id="klasse" placeholder="Klasse">
-        <input type="text" id="faecher" placeholder="Fächer, z.B. Mathe, Englisch">
-        <input type="text" id="interessen" placeholder="Interessen, z.B. Programmieren">
-        <button type="submit">Profil speichern</button>
-    </form>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Vor- und Nachname">
 
-    <p id="message"></p>
+            <label for="klasse">Klasse</label>
+            <input type="text" id="klasse" placeholder="z.B. 3a">
 
-    <section id="profileOutput"></section>
+            <label for="faecher">Fächer <span style="font-weight:400;text-transform:none;font-size:0.85em">(kommagetrennt)</span></label>
+            <input type="text" id="faecher" placeholder="z.B. Mathe, Englisch, Informatik">
 
-    <a href="matching.html">Lernpartner anzeigen</a>
-    <button onclick="logout()">Logout</button>
+            <label for="interessen">Interessen <span style="font-weight:400;text-transform:none;font-size:0.85em">(kommagetrennt)</span></label>
+            <input type="text" id="interessen" placeholder="z.B. Programmieren, Musik">
+
+            <label>Lernzeiten</label>
+            <div id="zeitGrid" class="zeit-grid"></div>
+
+            <button id="saveBtn" style="margin-top:8px">Profil speichern</button>
+        </div>
+
+        <div id="profileMessage"></div>
+    </div>
+
+    <div id="profileOutput"></div>
 </main>
 
 <script src="../js/auth.js"></script>
+<script>renderNav();</script>
 <script src="../js/profil.js"></script>
 </body>
 </html>

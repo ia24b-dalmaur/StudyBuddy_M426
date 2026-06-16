@@ -2,22 +2,27 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Lernpartner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Matching – StudyBuddy</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-<main class="container">
-    <h1>Passende Lernpartner:innen</h1>
+<nav id="mainNav"></nav>
 
-    <button id="matchButton">Matching starten</button>
+<main class="container">
+    <div class="card">
+        <div class="page-header">
+            <h1>Lernpartner finden</h1>
+        </div>
+        <p style="color:var(--text-muted);margin-bottom:16px">Wir vergleichen deine Fächer, Interessen und Lernzeiten, um die besten Matches zu finden.</p>
+        <button id="matchButton">🔍 Matching starten</button>
+    </div>
 
     <div id="partnerList"></div>
-
-    <a href="profil.html">Zurück zum Profil</a>
-    <button onclick="logout()">Logout</button>
 </main>
 
 <script src="../js/auth.js"></script>
+<script>renderNav();</script>
 <script src="../js/matching.js"></script>
 </body>
 </html>
