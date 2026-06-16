@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anfragen – StudyBuddy</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<nav id="mainNav"></nav>
+
+<main class="container">
+  <div class="card">
+    <h1>Kontaktanfragen</h1>
+
+    <h2 style="margin-bottom:12px">📥 Eingehend</h2>
+    <div id="eingangList"></div>
+
+    <div class="divider" style="margin:24px 0"></div>
+
+    <h2 style="margin-bottom:12px">📤 Gesendet</h2>
+    <div id="ausgangList"></div>
+  </div>
+</main>
+
+<script src="../js/auth.js"></script>
+<script>renderNav();</script>
+<script src="../js/anfragen.js"></script>
+</body>
+</html>
