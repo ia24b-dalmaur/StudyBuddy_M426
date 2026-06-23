@@ -1,109 +1,163 @@
 protectPage();
 
-// Demo-Profile
-const DEMO_PROFILES = [
-    { email: "anna@demo.ch",  name: "Anna M.",    klasse: "3a", faecher: ["Mathe", "Deutsch"],            interessen: ["Lesen", "Musik"],       lernzeiten: ["Morgens (6–9)", "Nachmittags (14–17)"] },
-    { email: "noah@demo.ch",  name: "Noah K.",    klasse: "3b", faecher: ["Biologie", "Geschichte"],       interessen: ["Sport", "Natur"],        lernzeiten: ["Abends (17–20)"] },
-    { email: "mia@demo.ch",   name: "Mia S.",     klasse: "3a", faecher: ["Englisch", "Mathe"],           interessen: ["Musik", "Reisen"],       lernzeiten: ["Nachmittags (14–17)", "Abends (17–20)"] },
-    { email: "leo@demo.ch",   name: "Leo T.",     klasse: "4b", faecher: ["Informatik", "Französisch"],   interessen: ["Programmieren", "Gaming"], lernzeiten: ["Nachts (20–23)", "Nachmittags (14–17)"] },
-    { email: "sara@demo.ch",  name: "Sara B.",    klasse: "4a", faecher: ["Chemie", "Mathe", "Physik"],  interessen: ["Wissenschaft", "Lesen"], lernzeiten: ["Morgens (6–9)", "Vormittags (9–12)"] },
-    { email: "tom@demo.ch",   name: "Tom W.",     klasse: "2b", faecher: ["Geschichte", "Deutsch"],       interessen: ["Film", "Musik"],         lernzeiten: ["Mittags (12–14)", "Abends (17–20)"] }
-];
-
+const email       = getCurrentUserEmail();
 const partnerList = document.getElementById("partnerList");
-const matchButton = document.getElementById("matchButton");
+let allMatches    = [];
 
-matchButton.addEventListener("click", doMatching);
+document.getElementById("matchButton").addEventListener("click", doMatching);
 
-function doMatching() {
-    partnerList.innerHTML = "";
-    const ownProfile  = JSON.parse(localStorage.getItem(getProfileKey()));
-    const ownZeiten   = JSON.parse(localStorage.getItem(getZeitenKey()) || "[]");
-    const ownEmail    = getCurrentUserEmail();
-
-    if (!ownProfile) {
-        partnerList.innerHTML = `<div class="msg msg-error">Bitte zuerst ein <a href="profil.html">Lernprofil</a> erstellen.</div>`;
-        return;
-    }
-
-    // Echte Benutzer-Profile aus localStorage hinzufügen
-    const allUsers = getAllUsers().filter(u => u.email !== ownEmail);
-    const otherProfiles = [...DEMO_PROFILES];
-
-    allUsers.forEach(u => {
-        const p = JSON.parse(localStorage.getItem("profile_" + u.email));
-        if (p) otherProfiles.push({ ...p, email: u.email, lernzeiten: JSON.parse(localStorage.getItem("lernzeiten_" + u.email) || "[]") });
-    });
-
-    const anfragen = getAllAnfragen();
-
-    const matches = otherProfiles.map(person => {
-        const gemFaecher    = (person.faecher    || []).filter(f => (ownProfile.faecher    || []).includes(f));
-        const gemInteressen = (person.interessen || []).filter(i => (ownProfile.interessen || []).includes(i));
-        const gemZeiten     = (person.lernzeiten || []).filter(z => ownZeiten.includes(z));
-        const score = gemFaecher.length * 3 + gemInteressen.length * 2 + gemZeiten.length;
-        return { ...person, gemFaecher, gemInteressen, gemZeiten, score };
-    })
-        .filter(p => p.gemFaecher.length > 0)
-        .sort((a, b) => b.score - a.score);
-
-    if (matches.length === 0) {
-        partnerList.innerHTML = `
-            <div class="empty-state">
-                <div class="icon">🔍</div>
-                <p>Keine passenden Lernpartner:innen gefunden.<br>Erweitere deine Fächer im Profil.</p>
-            </div>`;
-        return;
-    }
-
-    matches.forEach(person => {
-        const anfrage = anfragen.find(a => a.from === ownEmail && a.to === person.email);
-        let actionHtml = "";
-        if (anfrage) {
-            const label = anfrage.status === "pending"  ? "Anfrage gesendet" :
-                anfrage.status === "accepted" ? "✓ Verbunden" : "Abgelehnt";
-            const cls   = anfrage.status === "accepted" ? "status-accepted" :
-                anfrage.status === "rejected" ? "status-rejected" : "status-pending";
-            actionHtml = `<span class="status-badge ${cls}">${label}</span>`;
-        } else {
-            actionHtml = `<button class="btn btn-sm" onclick="sendRequest('${person.email}', this)">Anfrage senden</button>`;
-        }
-
-        const zeitenHtml = person.gemZeiten.length > 0
-            ? `<div class="match-tags-label" style="margin-top:10px">Gemeinsame Lernzeiten</div>
-               <div class="zeiten-display">${person.gemZeiten.map(z=>`<span class="tag">${z}</span>`).join("")}</div>`
-            : "";
-
-        const card = document.createElement("div");
-        card.className = "match-card";
-        card.innerHTML = `
-            <div class="match-header">
-                <div>
-                    <div class="match-name">${person.name}</div>
-                    <div class="match-meta">Klasse ${person.klasse || "?"}</div>
-                </div>
-                <span class="match-score">${person.score} Punkte</span>
-            </div>
-            <div class="match-tags">
-                <div class="match-tags-label">Gemeinsame Fächer</div>
-                <div>${person.gemFaecher.map(f => `<span class="tag tag-match">${f}</span>`).join("")}</div>
-            </div>
-            ${person.gemInteressen.length > 0 ? `
-            <div class="match-tags">
-                <div class="match-tags-label">Gemeinsame Interessen</div>
-                <div>${person.gemInteressen.map(i => `<span class="tag">${i}</span>`).join("")}</div>
-            </div>` : ""}
-            ${zeitenHtml}
-            <div style="margin-top:14px">${actionHtml}</div>
-        `;
-        partnerList.appendChild(card);
-    });
+function filterMatches() {
+    const q = document.getElementById("searchInput").value.toLowerCase();
+    const filtered = q ? allMatches.filter(p =>
+        p.name?.toLowerCase().includes(q) ||
+        (p.faecher||[]).some(f => f.toLowerCase().includes(q)) ||
+        (p.interessen||[]).some(i => i.toLowerCase().includes(q))
+    ) : allMatches;
+    renderMatchCards(filtered, document.getElementById("matchCount"));
 }
 
-function sendRequest(toEmail, btn) {
-    const success = sendAnfrage(toEmail);
-    if (success) {
-        btn.outerHTML = `<span class="status-badge status-pending">Anfrage gesendet</span>`;
+async function doMatching() {
+    partnerList.innerHTML = `<div class="msg msg-info"><i data-lucide="loader" style="width:15px;height:15px"></i> Analyse läuft...</div>`;
+    initIcons();
+    const meta = document.getElementById("matchMeta");
+
+    try {
+        const [ownProfil, ownZeiten, others, anfragenData] = await Promise.all([
+            apiFetch(`/api/profil?email=${encodeURIComponent(email)}`),
+            apiFetch(`/api/lernzeiten?email=${encodeURIComponent(email)}`),
+            apiFetch(`/api/matching?email=${encodeURIComponent(email)}`),
+            apiFetch(`/api/anfragen?email=${encodeURIComponent(email)}`)
+        ]);
+
+        if (!ownProfil) {
+            partnerList.innerHTML = `
+                <div class="empty-state">
+                    <i data-lucide="user-x" style="width:40px;height:40px;color:var(--text-muted);margin-bottom:12px"></i>
+                    <p>Bitte zuerst ein <a href="profil.html">Lernprofil</a> erstellen.</p>
+                </div>`;
+            initIcons();
+            return;
+        }
+
+        const sentAnfragen = anfragenData.ausgang || [];
+        const MAX_SCORE = Math.max(ownProfil.faecher?.length || 1, 1) * 3 + 4 + 6;
+
+        allMatches = others
+            .map(person => {
+                const gemFaecher    = (person.faecher    ||[]).filter(f => (ownProfil.faecher    ||[]).includes(f));
+                const gemInteressen = (person.interessen ||[]).filter(i => (ownProfil.interessen ||[]).includes(i));
+                const gemZeiten     = (person.lernzeiten ||[]).filter(z => (ownZeiten           ||[]).includes(z));
+                const score  = gemFaecher.length * 3 + gemInteressen.length * 2 + gemZeiten.length;
+                const pct    = Math.min(100, Math.round((score / MAX_SCORE) * 100));
+                const anfrage = sentAnfragen.find(a => a.to === person.email);
+                return { ...person, gemFaecher, gemInteressen, gemZeiten, score, pct, anfrage };
+            })
+            .filter(p => p.gemFaecher.length > 0)
+            .sort((a, b) => b.score - a.score);
+
+        meta.style.display = "block";
+        renderMatchCards(allMatches, document.getElementById("matchCount"));
+        initIcons();
+    } catch (err) {
+        partnerList.innerHTML = `<div class="msg msg-error"><i data-lucide="alert-circle" style="width:15px;height:15px"></i> ${err.message}</div>`;
+        initIcons();
+    }
+}
+
+function renderMatchCards(matches, badge) {
+    partnerList.innerHTML = "";
+    if (badge) badge.textContent = `${matches.length} Match${matches.length !== 1 ? "es" : ""} gefunden`;
+
+    if (!matches.length) {
+        partnerList.innerHTML = `
+            <div class="empty-state">
+                <i data-lucide="search-x" style="width:40px;height:40px;color:var(--text-muted);margin-bottom:12px"></i>
+                <p>Keine Matches gefunden.<br>Erweitere deine Fächer oder passe den Filter an.</p>
+            </div>`;
+        initIcons();
+        return;
+    }
+
+    matches.forEach((person, idx) => {
+        let actionHtml;
+        if (person.anfrage) {
+            const map = {
+                pending:  [`<i data-lucide="clock" style="width:12px;height:12px"></i> Ausstehend`,  "status-pending"],
+                accepted: [`<i data-lucide="check" style="width:12px;height:12px"></i> Verbunden`,   "status-accepted"],
+                rejected: [`<i data-lucide="x"     style="width:12px;height:12px"></i> Abgelehnt`,   "status-rejected"]
+            };
+            const [label, cls] = map[person.anfrage.status];
+            actionHtml = `<span class="status-badge ${cls}">${label}</span>`;
+        } else {
+            actionHtml = `<button class="btn btn-sm" onclick="sendRequest('${person.email}', this)">
+                <i data-lucide="user-plus" style="width:13px;height:13px"></i>
+                Anfrage senden
+            </button>`;
+        }
+
+        const tagsHtml = (arr, cls) => (arr||[]).map(x => `<span class="tag ${cls}">${x}</span>`).join("");
+        const card = document.createElement("div");
+        card.className = "match-card";
+        card.style.animationDelay = (idx * 60) + "ms";
+        card.innerHTML = `
+            <div class="match-header">
+                <div style="display:flex;align-items:center">
+                    <div class="match-avatar">${getInitials(person.name || person.email)}</div>
+                    <div class="match-info">
+                        <div class="match-name">${person.name || person.email}</div>
+                        <div class="match-meta">Klasse ${person.klasse || "?"}</div>
+                    </div>
+                </div>
+                <div class="match-score-wrap">
+                    <div class="match-score">${person.pct}%</div>
+                    <div class="match-score-label">Kompatibel</div>
+                </div>
+            </div>
+            <div class="match-score-bar">
+                <div class="match-score-fill" style="width:0%" data-pct="${person.pct}"></div>
+            </div>
+            ${person.gemFaecher.length ? `
+            <div class="match-tags-section">
+                <div class="match-tags-label"><i data-lucide="book" style="width:11px;height:11px"></i> Gemeinsame Fächer</div>
+                <div class="tags-row">${tagsHtml(person.gemFaecher, "tag-indigo")}</div>
+            </div>` : ""}
+            ${person.gemInteressen.length ? `
+            <div class="match-tags-section">
+                <div class="match-tags-label"><i data-lucide="heart" style="width:11px;height:11px"></i> Gemeinsame Interessen</div>
+                <div class="tags-row">${tagsHtml(person.gemInteressen, "tag-violet")}</div>
+            </div>` : ""}
+            ${person.gemZeiten.length ? `
+            <div class="match-tags-section">
+                <div class="match-tags-label"><i data-lucide="clock" style="width:11px;height:11px"></i> Gemeinsame Lernzeiten</div>
+                <div class="tags-row">${tagsHtml(person.gemZeiten, "")}</div>
+            </div>` : ""}
+            <div class="match-footer">
+                <span style="font-size:0.78rem;color:var(--text-muted)">${person.email}</span>
+                ${actionHtml}
+            </div>
+        `;
+        partnerList.appendChild(card);
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                const fill = card.querySelector(".match-score-fill");
+                if (fill) fill.style.width = fill.dataset.pct + "%";
+            }, 100 + idx * 60);
+        });
+    });
+
+    initIcons();
+}
+
+async function sendRequest(toEmail, btn) {
+    try {
+        await apiFetch("/api/anfragen", { method: "POST", body: JSON.stringify({ from: email, to: toEmail }) });
+        btn.outerHTML = `<span class="status-badge status-pending"><i data-lucide="clock" style="width:12px;height:12px"></i> Ausstehend</span>`;
+        const m = allMatches.find(p => p.email === toEmail);
+        if (m) m.anfrage = { to: toEmail, status: "pending" };
+        showToast("Anfrage gesendet!", "success");
         updateNotifBadge();
+        initIcons();
+    } catch (err) {
+        showToast(err.message, "error");
     }
 }

@@ -8,19 +8,33 @@
 </head>
 <body>
 <nav id="mainNav"></nav>
-
 <main class="container">
-    <div class="card">
-        <div class="page-header">
-            <h1>Lernpartner finden</h1>
-        </div>
-        <p style="color:var(--text-muted);margin-bottom:16px">Wir vergleichen deine Fächer, Interessen und Lernzeiten, um die besten Matches zu finden.</p>
-        <button id="matchButton">🔍 Matching starten</button>
+    <div class="page-header">
+        <div class="eyebrow">KI-Matching</div>
+        <h1>Lernpartner finden</h1>
+        <p>Wir matchen dich nach Fächern, Interessen und Lernzeiten.</p>
     </div>
-
+    <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div class="search-bar" style="flex:1;min-width:180px;margin:0">
+                <span class="search-icon"><i data-lucide="search"></i></span>
+                <input type="text" id="searchInput" placeholder="Nach Name oder Fach filtern..." oninput="filterMatches()">
+            </div>
+            <button id="matchButton">
+                <i data-lucide="sparkles"></i>
+                Matching starten
+            </button>
+        </div>
+    </div>
+    <div id="matchMeta" style="margin-bottom:12px;display:none">
+        <span class="match-count-badge">
+            <i data-lucide="users" style="width:13px;height:13px"></i>
+            <span id="matchCount"></span>
+        </span>
+    </div>
     <div id="partnerList"></div>
 </main>
-
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="../js/auth.js"></script>
 <script>renderNav();</script>
 <script src="../js/matching.js"></script>
