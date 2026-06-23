@@ -1,20 +1,27 @@
-const form = document.getElementById("loginForm");
 const message = document.getElementById("message");
 
-form.addEventListener("submit", function (event) {
-    event.preventDefault();
-
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
     const email    = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
+    const btn      = document.getElementById("loginBtn");
+    const spinner  = document.getElementById("spinner");
+    const btnText  = document.getElementById("btnText");
 
-    const user = getUserByEmail(email);
+    btn.disabled = true;
+    spinner.style.display = "block";
+    btnText.textContent = "Einloggen...";
 
-    if (!user || user.password !== password) {
-        message.textContent = "E-Mail oder Passwort ist falsch.";
-        message.className = "msg msg-error";
-        return;
+    try {
+        await apiFetch("/api/login", { method: "POST", body: JSON.stringify({ email, password }) });
+        sessionStorage.setItem("currentUser", email);
+        btnText.textContent = "Erfolgreich";
+        setTimeout(() => window.location.href = "profil.html", 500);
+    } catch (err) {
+        message.innerHTML = `<div class="msg msg-error"><i data-lucide="alert-circle" style="width:15px;height:15px;flex-shrink:0"></i> ${err.message}</div>`;
+        initIcons();
+        btn.disabled = false;
+        spinner.style.display = "none";
+        btnText.textContent = "Einloggen";
     }
-
-    sessionStorage.setItem("currentUser", email);
-    window.location.href = "profil.html";
 });

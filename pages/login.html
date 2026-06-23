@@ -5,32 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login – StudyBuddy</title>
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .auth-input-wrap { position: relative; }
+        .input-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; display:flex; align-items:center; }
+        .input-icon svg { width:15px; height:15px; }
+        .auth-input-wrap input { padding-left: 38px; }
+        .btn-spinner { display: none; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
-<main class="auth-container">
-    <div class="auth-logo">
-        <div class="logo-text">📚 StudyBuddy</div>
-        <div class="logo-sub">Deine Lernpartner-Plattform</div>
-    </div>
-
-    <div class="card">
-        <h1>Einloggen</h1>
-
-        <form id="loginForm" class="form-group">
-            <label for="email">E-Mail</label>
-            <input type="email" id="email" placeholder="name@schule.ch" autocomplete="email">
-            <label for="password">Passwort</label>
-            <input type="password" id="password" placeholder="Passwort" autocomplete="current-password">
-            <button type="submit">Einloggen</button>
-        </form>
-
-        <div id="message"></div>
-    </div>
-
-    <p class="auth-link">Noch kein Konto? <a href="register.html">Jetzt registrieren</a></p>
-</main>
-
+<div class="auth-wrap">
+    <div class="auth-box">
+        <div class="auth-logo">
+            <div class="logo-mark"><i data-lucide="book-open"></i></div>
+            <span class="logo-text">StudyBuddy</span>
+            <div class="logo-sub">Finde deinen perfekten Lernpartner</div>
+        </div>
+        <div class="auth-card">
+            <div class="auth-title">Willkommen zurück</div>
+            <form id="loginForm" class="form-group">
+                <div class="field">
+                    <label for="email">E-Mail</label>
+                    <div class="auth-input-wrap">
+                        <span class="input-icon"><i data-lucide="mail"></i></span>
+                        <input type="email" id="email" placeholder="name@schule.ch" autocomplete="email" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="password">Passwort</label>
+                    <div class="auth-input-wrap">
+                        <span class="input-icon"><i data-lucide="lock"></i></span>
+                        <input type="password" id="password" placeholder="Dein Passwort" autocomplete="current-password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-full" id="loginBtn">
+                    <span class="btn-spinner" id="spinner"></span>
+                    <span id="btnText">Einloggen</span>
+                </button>
+            </form>
+            <div id="message"></div>
+        </div>
+        <p class="auth-footer">Noch kein Konto? <a href="/pages/register.html">Jetzt registrieren</a></p>    </div>
+</div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="../js/auth.js"></script>
 <script src="../js/login.js"></script>
+<script>lucide.createIcons();</script>
 </body>
 </html>
