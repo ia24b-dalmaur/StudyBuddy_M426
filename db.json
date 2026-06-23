@@ -1,0 +1,41 @@
+{
+  "users": [
+    {
+      "email": "max.mustermann@example.com",
+      "password": "1234"
+    }
+  ],
+  "profiles": [
+    {
+      "email": "max.mustermann@example.com",
+      "name": "test1",
+      "klasse": "IA24b",
+      "faecher": [
+        "Mathematik",
+        "Deutsch",
+        "Englisch",
+        "Französisch",
+        "Geschichte",
+        "Informatik",
+        "Sport"
+      ],
+      "interessen": [
+        "Programmieren",
+        "Gaming",
+        "Sport",
+        "Fotografie"
+      ]
+    }
+  ],
+  "lernzeiten": [
+    {
+      "email": "max.mustermann@example.com",
+      "zeiten": [
+        "Vormittags (9–12)",
+        "Abends (17–20)"
+      ]
+    }
+  ],
+  "anfragen": [],
+  "sessions": []
+}
