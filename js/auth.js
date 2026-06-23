@@ -81,7 +81,7 @@ async function renderNav() {
                 <i data-lucide="zap" style="width:15px;height:15px"></i>
                 <span>Matching</span>
             </a>
-            <a href="sessions.html">
+            <a href="session.html">
                 <i data-lucide="radio" style="width:15px;height:15px"></i>
                 <span>Sessions</span>
             </a>
