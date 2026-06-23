@@ -1,3 +1,10 @@
+function changeVal(id, delta) {
+    const input = document.getElementById(id);
+    const min   = parseInt(input.min) || 1;
+    const max   = parseInt(input.max) || 999;
+    input.value = Math.min(max, Math.max(min, parseInt(input.value) + delta));
+}
+
 protectPage();
 
 const email = getCurrentUserEmail();
