@@ -8,21 +8,26 @@
 </head>
 <body>
 <nav id="mainNav"></nav>
-
 <main class="container">
-  <div class="card">
+  <div class="page-header">
+    <div class="eyebrow">Soziales</div>
     <h1>Kontaktanfragen</h1>
-
-    <h2 style="margin-bottom:12px">📥 Eingehend</h2>
-    <div id="eingangList"></div>
-
-    <div class="divider" style="margin:24px 0"></div>
-
-    <h2 style="margin-bottom:12px">📤 Gesendet</h2>
-    <div id="ausgangList"></div>
+    <p>Verwalte deine eingehenden und gesendeten Anfragen.</p>
   </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('eingang', this)">
+      <i data-lucide="inbox" style="width:14px;height:14px"></i>
+      Eingehend <span id="eingangCount"></span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('ausgang', this)">
+      <i data-lucide="send" style="width:14px;height:14px"></i>
+      Gesendet
+    </button>
+  </div>
+  <div id="tab-eingang"><div id="eingangList"></div></div>
+  <div id="tab-ausgang" style="display:none"><div id="ausgangList"></div></div>
 </main>
-
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="../js/auth.js"></script>
 <script>renderNav();</script>
 <script src="../js/anfragen.js"></script>
