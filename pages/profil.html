@@ -8,36 +8,62 @@
 </head>
 <body>
 <nav id="mainNav"></nav>
-
 <main class="container">
+    <div class="page-header">
+        <div class="eyebrow">Mein Account</div>
+        <h1>Lernprofil</h1>
+        <p>Gib deine Fächer und Zeiten an, damit wir passende Partner finden.</p>
+    </div>
+
     <div class="card">
-        <h1>Mein Lernprofil</h1>
-
         <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" placeholder="Vor- und Nachname">
+            <div class="field">
+                <label for="name">Vollständiger Name</label>
+                <input type="text" id="name" placeholder="z.B. Max Mustermann">
+            </div>
+            <div class="field">
+                <label for="klasse">Klasse / Gruppe</label>
+                <input type="text" id="klasse" placeholder="z.B. IA24b">
+            </div>
 
-            <label for="klasse">Klasse</label>
-            <input type="text" id="klasse" placeholder="z.B. 3a">
+            <div class="field">
+                <label>Fächer <span style="color:var(--text-muted);font-weight:400">— klicke zum Auswählen</span></label>
+                <div id="faecherGrid" class="tag-selector-grid"></div>
+                <div class="custom-input-row">
+                    <input type="text" id="faecherInput" placeholder="Eigenes Fach hinzufügen...">
+                    <button id="faecherAddBtn" class="btn btn-ghost btn-sm">
+                        <i data-lucide="plus" style="width:14px;height:14px"></i>
+                    </button>
+                </div>
+            </div>
 
-            <label for="faecher">Fächer <span style="font-weight:400;text-transform:none;font-size:0.85em">(kommagetrennt)</span></label>
-            <input type="text" id="faecher" placeholder="z.B. Mathe, Englisch, Informatik">
+            <div class="field">
+                <label>Interessen <span style="color:var(--text-muted);font-weight:400">— klicke zum Auswählen</span></label>
+                <div id="interessenGrid" class="tag-selector-grid"></div>
+                <div class="custom-input-row">
+                    <input type="text" id="interessenInput" placeholder="Eigenes Interesse hinzufügen...">
+                    <button id="interessenAddBtn" class="btn btn-ghost btn-sm">
+                        <i data-lucide="plus" style="width:14px;height:14px"></i>
+                    </button>
+                </div>
+            </div>
 
-            <label for="interessen">Interessen <span style="font-weight:400;text-transform:none;font-size:0.85em">(kommagetrennt)</span></label>
-            <input type="text" id="interessen" placeholder="z.B. Programmieren, Musik">
+            <div class="field">
+                <label>Wann lernst du am liebsten?</label>
+                <div id="zeitGrid" class="zeit-grid"></div>
+            </div>
 
-            <label>Lernzeiten</label>
-            <div id="zeitGrid" class="zeit-grid"></div>
-
-            <button id="saveBtn" style="margin-top:8px">Profil speichern</button>
+            <button id="saveBtn" class="btn-full">
+                <i data-lucide="save"></i>
+                Profil speichern
+            </button>
         </div>
-
         <div id="profileMessage"></div>
     </div>
 
     <div id="profileOutput"></div>
 </main>
-
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="../js/auth.js"></script>
 <script>renderNav();</script>
 <script src="../js/profil.js"></script>
