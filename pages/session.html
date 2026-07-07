@@ -10,16 +10,29 @@
 <nav id="mainNav"></nav>
 <main class="container">
     <div class="page-header">
-        <div class="eyebrow">Live</div>
-        <h1>Lernsessions</h1>
-        <p>Erstelle eine Session oder tritt einer laufenden bei.</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div>
+                <div class="eyebrow">Lernsessions</div>
+                <h1>Sessions</h1>
+                <p>Finde laufende oder geplante Lernsessions.</p>
+            </div>
+            <button id="openCreateBtn">
+                <i data-lucide="plus" style="width:15px;height:15px"></i>
+                Session erstellen
+            </button>
+        </div>
     </div>
 
-    <div class="card" id="createCard">
-        <h2 style="margin-bottom:16px;display:flex;align-items:center;gap:8px">
-            <i data-lucide="plus-circle" style="width:18px;height:18px;color:var(--indigo-light)"></i>
-            Session erstellen
-        </h2>
+    <div class="card" id="createCard" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <h2 style="display:flex;align-items:center;gap:8px;margin:0">
+                <i data-lucide="plus-circle" style="width:18px;height:18px;color:var(--indigo-light)"></i>
+                Neue Session
+            </h2>
+            <button class="btn btn-ghost btn-sm" onclick="closeCreateForm()" style="padding:6px 8px">
+                <i data-lucide="x" style="width:15px;height:15px"></i>
+            </button>
+        </div>
         <div class="form-group">
             <div class="field">
                 <label for="sessionFach">Fach</label>
@@ -29,6 +42,22 @@
                 <label for="sessionThema">Thema / Beschreibung</label>
                 <input type="text" id="sessionThema" placeholder="z.B. Analysis – Ableitungen üben">
             </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div class="field">
+                    <label for="sessionDatum">Datum</label>
+                    <input type="date" id="sessionDatum">
+                </div>
+                <div class="field">
+                    <label for="sessionZeit">Uhrzeit</label>
+                    <input type="time" id="sessionZeit">
+                </div>
+            </div>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="setJetzt()" style="align-self:flex-start">
+                <i data-lucide="zap" style="width:13px;height:13px"></i>
+                Jetzt starten
+            </button>
+
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
                 <div class="field">
                     <label>Dauer (Minuten)</label>
@@ -55,22 +84,47 @@
                     </div>
                 </div>
             </div>
+
+            <div class="field">
+                <label>Format</label>
+                <div class="toggle-row">
+                    <button type="button" class="toggle-btn active" id="vorOrtBtn" onclick="setFormat('vor-ort')">
+                        <i data-lucide="map-pin" style="width:14px;height:14px"></i> Vor Ort
+                    </button>
+                    <button type="button" class="toggle-btn" id="onlineBtn" onclick="setFormat('online')">
+                        <i data-lucide="video" style="width:14px;height:14px"></i> Online
+                    </button>
+                </div>
+            </div>
+            <div class="field" id="linkField" style="display:none">
+                <label for="sessionLink">Meeting-Link (Teams / Zoom)</label>
+                <input type="text" id="sessionLink" placeholder="https://teams.microsoft.com/...">
+            </div>
+
             <button id="createBtn" class="btn-full">
                 <i data-lucide="play-circle" style="width:15px;height:15px"></i>
-                Session starten
+                Session erstellen
             </button>
         </div>
         <div id="createMsg"></div>
     </div>
 
     <div id="mySessionWrap" style="display:none">
-        <div class="section-label" style="margin-bottom:10px">Meine aktive Session</div>
+        <div class="section-label" style="margin-bottom:10px">Meine Session</div>
         <div id="mySession"></div>
     </div>
 
+    <div id="einladungenWrap" style="display:none">
+        <div class="section-label" style="margin:20px 0 10px">
+            <i data-lucide="mail" style="width:12px;height:12px"></i>
+            Einladungen von Freunden
+        </div>
+        <div id="einladungenList"></div>
+    </div>
+
     <div class="section-label" style="margin:20px 0 10px">
-        <i data-lucide="radio" style="width:12px;height:12px;color:var(--emerald)"></i>
-        Aktive Sessions
+        <i data-lucide="calendar" style="width:12px;height:12px"></i>
+        Sessions
         <button onclick="loadSessions()" class="btn btn-ghost btn-sm" style="margin-left:auto;padding:4px 10px;font-size:12px">
             <i data-lucide="refresh-cw" style="width:12px;height:12px"></i>
             Aktualisieren
