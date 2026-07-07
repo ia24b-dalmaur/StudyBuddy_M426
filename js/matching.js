@@ -2,11 +2,28 @@ protectPage();
 
 const email       = getCurrentUserEmail();
 const partnerList = document.getElementById("partnerList");
-let allMatches    = [];
+let allMatches     = [];
+let hasMatchedOnce = false;
 
 document.getElementById("matchButton").addEventListener("click", doMatching);
 
-function filterMatches() {
+// Enter-Taste löst Matching aus (ausser im Suchfeld, das filtert nur)
+document.addEventListener("keydown", e => {
+    if (e.key !== "Enter") return;
+    if (e.target.id === "searchInput") return;
+    doMatching();
+});
+
+// Live-Suche: erstes Tippen startet automatisch das Matching
+async function filterMatches() {
+    if (!hasMatchedOnce) {
+        await doMatching();
+        return; // doMatching() rendert bereits gefiltert über applyFilter()
+    }
+    applyFilter();
+}
+
+function applyFilter() {
     const q = document.getElementById("searchInput").value.toLowerCase();
     const filtered = q ? allMatches.filter(p =>
         p.name?.toLowerCase().includes(q) ||
@@ -56,7 +73,8 @@ async function doMatching() {
             .sort((a, b) => b.score - a.score);
 
         meta.style.display = "block";
-        renderMatchCards(allMatches, document.getElementById("matchCount"));
+        hasMatchedOnce = true;
+        applyFilter();
         initIcons();
     } catch (err) {
         partnerList.innerHTML = `<div class="msg msg-error"><i data-lucide="alert-circle" style="width:15px;height:15px"></i> ${err.message}</div>`;
@@ -89,10 +107,11 @@ function renderMatchCards(matches, badge) {
             const [label, cls] = map[person.anfrage.status];
             actionHtml = `<span class="status-badge ${cls}">${label}</span>`;
         } else {
-            actionHtml = `<button class="btn btn-sm" onclick="sendRequest('${person.email}', this)">
-                <i data-lucide="user-plus" style="width:13px;height:13px"></i>
-                Anfrage senden
-            </button>`;
+            actionHtml = `
+                <button class="btn btn-sm" onclick="sendRequest('${person.email}', this)">
+                    <i data-lucide="user-plus" style="width:13px;height:13px"></i>
+                    Anfrage senden
+                </button>`;
         }
 
         const tagsHtml = (arr, cls) => (arr||[]).map(x => `<span class="tag ${cls}">${x}</span>`).join("");
