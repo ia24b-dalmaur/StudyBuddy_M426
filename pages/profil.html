@@ -12,20 +12,27 @@
     <div class="page-header">
         <div class="eyebrow">Mein Account</div>
         <h1>Lernprofil</h1>
-        <p>Gib deine Fächer und Zeiten an, damit wir passende Partner finden.</p>
+        <p>Hier siehst du deine gespeicherten Angaben.</p>
     </div>
 
-    <div class="card">
+    <div id="profileOutput"></div>
+
+    <div class="card" id="editCard" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <h2 style="margin:0">Profil bearbeiten</h2>
+            <button class="btn btn-ghost btn-sm" onclick="closeEdit()" style="padding:6px 8px">
+                <i data-lucide="x" style="width:15px;height:15px"></i>
+            </button>
+        </div>
         <div class="form-group">
             <div class="field">
                 <label for="name">Vollständiger Name</label>
-                <input type="text" id="name" placeholder="z.B. Max Mustermann">
+                <input type="text" id="name" placeholder="z.B. Tiyi Müller">
             </div>
             <div class="field">
                 <label for="klasse">Klasse / Gruppe</label>
                 <input type="text" id="klasse" placeholder="z.B. IA24b">
             </div>
-
             <div class="field">
                 <label>Fächer <span style="color:var(--text-muted);font-weight:400">— klicke zum Auswählen</span></label>
                 <div id="faecherGrid" class="tag-selector-grid"></div>
@@ -36,7 +43,6 @@
                     </button>
                 </div>
             </div>
-
             <div class="field">
                 <label>Interessen <span style="color:var(--text-muted);font-weight:400">— klicke zum Auswählen</span></label>
                 <div id="interessenGrid" class="tag-selector-grid"></div>
@@ -47,21 +53,17 @@
                     </button>
                 </div>
             </div>
-
             <div class="field">
                 <label>Wann lernst du am liebsten?</label>
                 <div id="zeitGrid" class="zeit-grid"></div>
             </div>
-
             <button id="saveBtn" class="btn-full">
                 <i data-lucide="save"></i>
-                Profil speichern
+                Speichern
             </button>
         </div>
         <div id="profileMessage"></div>
     </div>
-
-    <div id="profileOutput"></div>
 </main>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="../js/auth.js"></script>
