@@ -3,6 +3,66 @@
     {
       "email": "max.mustermann@example.com",
       "password": "1234"
+    },
+    {
+      "email": "anna.berger@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "noah.keller@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "mia.schneider@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "leo.tanner@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "sara.brunner@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "tom.wyss@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "lea.frei@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "finn.huber@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "emma.moser@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "luca.steiner@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "nora.weber@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "ben.graf@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "lina.fischer@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "jan.meier@example.com",
+      "password": "1234"
+    },
+    {
+      "email": "zoe.bachmann@example.com",
+      "password": "1234"
     }
   ],
   "profiles": [
@@ -23,7 +83,233 @@
         "Programmieren",
         "Gaming",
         "Sport",
+        "Fotografie",
+        "Musik"
+      ]
+    },
+    {
+      "email": "anna.berger@example.com",
+      "name": "Anna Berger",
+      "klasse": "IA24b",
+      "faecher": [
+        "Mathematik",
+        "Informatik",
+        "Physik"
+      ],
+      "interessen": [
+        "Programmieren",
+        "Gaming",
+        "Musik"
+      ]
+    },
+    {
+      "email": "noah.keller@example.com",
+      "name": "Noah Keller",
+      "klasse": "IA24a",
+      "faecher": [
+        "Biologie",
+        "Chemie",
+        "Geschichte"
+      ],
+      "interessen": [
+        "Natur",
+        "Wissenschaft",
+        "Lesen"
+      ]
+    },
+    {
+      "email": "mia.schneider@example.com",
+      "name": "Mia Schneider",
+      "klasse": "IA24b",
+      "faecher": [
+        "Englisch",
+        "Mathematik",
+        "Kunst"
+      ],
+      "interessen": [
+        "Musik",
+        "Reisen",
+        "Zeichnen"
+      ]
+    },
+    {
+      "email": "leo.tanner@example.com",
+      "name": "Leo Tanner",
+      "klasse": "IA24c",
+      "faecher": [
+        "Informatik",
+        "Französisch",
+        "Sport"
+      ],
+      "interessen": [
+        "Programmieren",
+        "Gaming",
+        "Sport"
+      ]
+    },
+    {
+      "email": "sara.brunner@example.com",
+      "name": "Sara Brunner",
+      "klasse": "IA24a",
+      "faecher": [
+        "Chemie",
+        "Mathematik",
+        "Physik"
+      ],
+      "interessen": [
+        "Wissenschaft",
+        "Lesen",
+        "Podcasts"
+      ]
+    },
+    {
+      "email": "tom.wyss@example.com",
+      "name": "Tom Wyss",
+      "klasse": "IA24b",
+      "faecher": [
+        "Geschichte",
+        "Deutsch",
+        "Wirtschaft"
+      ],
+      "interessen": [
+        "Filme",
+        "Musik",
+        "Theater"
+      ]
+    },
+    {
+      "email": "lea.frei@example.com",
+      "name": "Lea Frei",
+      "klasse": "IA24c",
+      "faecher": [
+        "Mathematik",
+        "Deutsch",
+        "Englisch"
+      ],
+      "interessen": [
+        "Lesen",
+        "Reisen",
         "Fotografie"
+      ]
+    },
+    {
+      "email": "finn.huber@example.com",
+      "name": "Finn Huber",
+      "klasse": "IA24a",
+      "faecher": [
+        "Informatik",
+        "Mathematik",
+        "Physik"
+      ],
+      "interessen": [
+        "Programmieren",
+        "Wissenschaft",
+        "Gaming"
+      ]
+    },
+    {
+      "email": "emma.moser@example.com",
+      "name": "Emma Moser",
+      "klasse": "IA24b",
+      "faecher": [
+        "Französisch",
+        "Englisch",
+        "Kunst"
+      ],
+      "interessen": [
+        "Sprachen",
+        "Reisen",
+        "Zeichnen"
+      ]
+    },
+    {
+      "email": "luca.steiner@example.com",
+      "name": "Luca Steiner",
+      "klasse": "IA24c",
+      "faecher": [
+        "Sport",
+        "Biologie",
+        "Geografie"
+      ],
+      "interessen": [
+        "Sport",
+        "Natur",
+        "Fotografie"
+      ]
+    },
+    {
+      "email": "nora.weber@example.com",
+      "name": "Nora Weber",
+      "klasse": "IA24a",
+      "faecher": [
+        "Deutsch",
+        "Geschichte",
+        "Englisch"
+      ],
+      "interessen": [
+        "Lesen",
+        "Theater",
+        "Podcasts"
+      ]
+    },
+    {
+      "email": "ben.graf@example.com",
+      "name": "Ben Graf",
+      "klasse": "IA24b",
+      "faecher": [
+        "Mathematik",
+        "Informatik",
+        "Sport"
+      ],
+      "interessen": [
+        "Programmieren",
+        "Gaming",
+        "Sport"
+      ]
+    },
+    {
+      "email": "lina.fischer@example.com",
+      "name": "Lina Fischer",
+      "klasse": "IA24c",
+      "faecher": [
+        "Chemie",
+        "Biologie",
+        "Mathematik"
+      ],
+      "interessen": [
+        "Wissenschaft",
+        "Natur",
+        "Kochen"
+      ]
+    },
+    {
+      "email": "jan.meier@example.com",
+      "name": "Jan Meier",
+      "klasse": "IA24a",
+      "faecher": [
+        "Wirtschaft",
+        "Mathematik",
+        "Englisch"
+      ],
+      "interessen": [
+        "Podcasts",
+        "Reisen",
+        "Musik"
+      ]
+    },
+    {
+      "email": "zoe.bachmann@example.com",
+      "name": "Zoe Bachmann",
+      "klasse": "IA24b",
+      "faecher": [
+        "Kunst",
+        "Deutsch",
+        "Französisch"
+      ],
+      "interessen": [
+        "Zeichnen",
+        "Theater",
+        "Musik"
       ]
     }
   ],
@@ -34,8 +320,172 @@
         "Vormittags (9–12)",
         "Abends (17–20)"
       ]
+    },
+    {
+      "email": "anna.berger@example.com",
+      "zeiten": [
+        "Morgens (6–9)",
+        "Nachmittags (14–17)"
+      ]
+    },
+    {
+      "email": "noah.keller@example.com",
+      "zeiten": [
+        "Abends (17–20)"
+      ]
+    },
+    {
+      "email": "mia.schneider@example.com",
+      "zeiten": [
+        "Nachmittags (14–17)",
+        "Abends (17–20)"
+      ]
+    },
+    {
+      "email": "leo.tanner@example.com",
+      "zeiten": [
+        "Nachts (20–23)",
+        "Nachmittags (14–17)"
+      ]
+    },
+    {
+      "email": "sara.brunner@example.com",
+      "zeiten": [
+        "Morgens (6–9)",
+        "Vormittags (9–12)"
+      ]
+    },
+    {
+      "email": "tom.wyss@example.com",
+      "zeiten": [
+        "Mittags (12–14)",
+        "Abends (17–20)"
+      ]
+    },
+    {
+      "email": "lea.frei@example.com",
+      "zeiten": [
+        "Vormittags (9–12)",
+        "Nachmittags (14–17)"
+      ]
+    },
+    {
+      "email": "finn.huber@example.com",
+      "zeiten": [
+        "Nachts (20–23)",
+        "Abends (17–20)"
+      ]
+    },
+    {
+      "email": "emma.moser@example.com",
+      "zeiten": [
+        "Morgens (6–9)",
+        "Mittags (12–14)"
+      ]
+    },
+    {
+      "email": "luca.steiner@example.com",
+      "zeiten": [
+        "Nachmittags (14–17)"
+      ]
+    },
+    {
+      "email": "nora.weber@example.com",
+      "zeiten": [
+        "Vormittags (9–12)",
+        "Abends (17–20)"
+      ]
+    },
+    {
+      "email": "ben.graf@example.com",
+      "zeiten": [
+        "Nachts (20–23)",
+        "Vormittags (9–12)"
+      ]
+    },
+    {
+      "email": "lina.fischer@example.com",
+      "zeiten": [
+        "Morgens (6–9)",
+        "Nachmittags (14–17)"
+      ]
+    },
+    {
+      "email": "jan.meier@example.com",
+      "zeiten": [
+        "Mittags (12–14)",
+        "Nachts (20–23)"
+      ]
+    },
+    {
+      "email": "zoe.bachmann@example.com",
+      "zeiten": [
+        "Abends (17–20)",
+        "Nachmittags (14–17)"
+      ]
     }
   ],
-  "anfragen": [],
+  "anfragen": [
+    {
+      "from": "anna.berger@example.com",
+      "to": "max.mustermann@example.com",
+      "status": "rejected",
+      "timestamp": 1719500000000
+    },
+    {
+      "from": "leo.tanner@example.com",
+      "to": "max.mustermann@example.com",
+      "status": "accepted",
+      "timestamp": 1719500100000
+    },
+    {
+      "from": "ben.graf@example.com",
+      "to": "max.mustermann@example.com",
+      "status": "rejected",
+      "timestamp": 1719500200000
+    },
+    {
+      "from": "lea.frei@example.com",
+      "to": "max.mustermann@example.com",
+      "status": "accepted",
+      "timestamp": 1719500300000
+    },
+    {
+      "from": "finn.huber@example.com",
+      "to": "max.mustermann@example.com",
+      "status": "accepted",
+      "timestamp": 1719400000000
+    },
+    {
+      "from": "sara.brunner@example.com",
+      "to": "max.mustermann@example.com",
+      "status": "pending",
+      "timestamp": 1719400100000
+    },
+    {
+      "from": "max.mustermann@example.com",
+      "to": "jan.meier@example.com",
+      "status": "pending",
+      "timestamp": 1719500400000
+    },
+    {
+      "from": "max.mustermann@example.com",
+      "to": "nora.weber@example.com",
+      "status": "pending",
+      "timestamp": 1782823964122
+    },
+    {
+      "from": "max.mustermann@example.com",
+      "to": "lea.frei@example.com",
+      "status": "pending",
+      "timestamp": 1782824340962
+    },
+    {
+      "from": "max.mustermann@example.com",
+      "to": "ben.graf@example.com",
+      "status": "pending",
+      "timestamp": 1782825029382
+    }
+  ],
   "sessions": []
 }
