@@ -6,7 +6,7 @@ const app  = express();
 const PORT = 8080;
 const DB   = path.join(__dirname, "db.json");
 
-const EMPTY_DB = { users: [], profiles: [], lernzeiten: [], anfragen: [], sessions: [] };
+const EMPTY_DB = { users: [], profiles: [], lernzeiten: [], anfragen: [], sessions: [], einladungen: [] };
 if (!fs.existsSync(DB)) {
     fs.writeFileSync(DB, JSON.stringify(EMPTY_DB, null, 2));
     console.log("db.json erstellt.");
@@ -32,6 +32,25 @@ function writeDB(data) {
 }
 function apiError(res, status, message) {
     res.status(status).json({ error: message });
+}
+
+// Liefert alle E-Mails der Freunde (= angenommene Anfragen) eines Users
+function getFriends(db, email) {
+    return (db.anfragen || [])
+        .filter(a => a.status === "accepted" && (a.from === email || a.to === email))
+        .map(a => a.from === email ? a.to : a.from);
+}
+
+// Berechnet den Match-Score zwischen zwei Profilen (0–100)
+function calcMatchScore(ownProfil, ownZeiten, otherProfil) {
+    if (!ownProfil || !otherProfil) return 0;
+    const gemFaecher    = (otherProfil.faecher    || []).filter(f => (ownProfil.faecher    || []).includes(f));
+    const gemInteressen = (otherProfil.interessen || []).filter(i => (ownProfil.interessen || []).includes(i));
+    const otherZeiten   = otherProfil.lernzeiten || [];
+    const gemZeiten     = otherZeiten.filter(z => (ownZeiten || []).includes(z));
+    const score = gemFaecher.length * 3 + gemInteressen.length * 2 + gemZeiten.length;
+    const MAX   = Math.max(ownProfil.faecher?.length || 1, 1) * 3 + 4 + 6;
+    return gemFaecher.length > 0 ? Math.min(100, Math.round((score / MAX) * 100)) : 0;
 }
 
 // ── AUTH ──────────────────────────────────────────────────────────
@@ -159,36 +178,77 @@ app.get("/api/anfragen/pending-count", (req, res) => {
     } catch (e) { apiError(res, 500, e.message); }
 });
 
+// ── FREUNDE ───────────────────────────────────────────────────────
+app.get("/api/freunde", (req, res) => {
+    try {
+        const db = readDB();
+        const friends = getFriends(db, req.query.email);
+        const list = friends.map(fEmail => {
+            const p = db.profiles.find(p => p.email === fEmail);
+            return { email: fEmail, name: p?.name || fEmail };
+        });
+        res.json(list);
+    } catch (e) { apiError(res, 500, e.message); }
+});
+
 // ── SESSIONS ──────────────────────────────────────────────────────
 app.get("/api/sessions", (req, res) => {
     try {
+        const { email } = req.query;
         const db  = readDB();
         const now = Date.now();
-        db.sessions = (db.sessions || []).filter(s => s.expiresAt > now);
+
+        // Abgelaufene live-Sessions entfernen (geplante nie löschen)
+        db.sessions = (db.sessions || []).filter(s =>
+            s.type === "planned" || s.expiresAt > now
+        );
         writeDB(db);
+
+        const ownProfil      = db.profiles.find(p => p.email === email) || null;
+        const ownZeitenEntry = db.lernzeiten.find(l => l.email === email);
+        const ownZeiten      = ownZeitenEntry ? ownZeitenEntry.zeiten : [];
+
         const sessions = db.sessions.map(s => {
-            const profil = db.profiles.find(p => p.email === s.creator);
-            return { ...s, creatorName: profil?.name || s.creator };
+            const creatorProfil      = db.profiles.find(p => p.email === s.creator);
+            const creatorZeitenEntry = db.lernzeiten.find(l => l.email === s.creator);
+            const creatorZeiten      = creatorZeitenEntry ? creatorZeitenEntry.zeiten : [];
+            const creatorProfilMitZeiten = creatorProfil
+                ? { ...creatorProfil, lernzeiten: creatorZeiten }
+                : null;
+
+            const matchScore = email && email !== s.creator
+                ? calcMatchScore(ownProfil, ownZeiten, creatorProfilMitZeiten)
+                : null;
+
+            return { ...s, creatorName: creatorProfil?.name || s.creator, matchScore };
         });
+
         res.json(sessions);
     } catch (e) { apiError(res, 500, e.message); }
 });
 
 app.post("/api/sessions", (req, res) => {
     try {
-        const { creator, fach, thema, dauer, maxTeilnehmer } = req.body;
-        if (!creator || !fach) return apiError(res, 400, "creator und fach erforderlich.");
+        const { creator, fach, thema, startAt, dauer, maxTeilnehmer, format, link } = req.body;
+        if (!creator || !fach || !startAt) return apiError(res, 400, "creator, fach und startAt erforderlich.");
         const db = readDB();
         if (!db.sessions) db.sessions = [];
+
         db.sessions = db.sessions.filter(s => s.creator !== creator);
+
+        const start = parseInt(startAt);
+        const dauerMin = parseInt(dauer) || 60;
         const session = {
             id: Date.now().toString(),
             creator, fach, thema,
-            dauer: parseInt(dauer) || 60,
+            startAt: start,
+            dauer: dauerMin,
             maxTeilnehmer: parseInt(maxTeilnehmer) || 999,
+            format: format === "online" ? "online" : "vor-ort",
+            link: format === "online" ? (link || "") : "",
             teilnehmer: [],
             createdAt: Date.now(),
-            expiresAt: Date.now() + (parseInt(dauer) || 60) * 60 * 1000
+            expiresAt: start + dauerMin * 60 * 1000
         };
         db.sessions.push(session);
         writeDB(db);
@@ -207,17 +267,51 @@ app.post("/api/sessions/join", (req, res) => {
         if (session.creator === email) return apiError(res, 400, "Du bist der Ersteller.");
         if (session.teilnehmer.includes(email)) return apiError(res, 409, "Du bist bereits dabei.");
         if (session.teilnehmer.length >= session.maxTeilnehmer) return apiError(res, 400, "Session ist voll.");
-        session.teilnehmer.push(email);
-        if (!db.anfragen) db.anfragen = [];
-        const exists = db.anfragen.find(a =>
-            (a.from === email && a.to === session.creator) ||
-            (a.from === session.creator && a.to === email)
-        );
-        if (!exists) {
-            db.anfragen.push({ from: email, to: session.creator, status: "pending", timestamp: Date.now() });
+        const friends = getFriends(db, email);
+        if (!friends.includes(session.creator)) {
+            return apiError(res, 403, "Nur Freunde können dieser Session beitreten.");
         }
+        session.teilnehmer.push(email);
         writeDB(db);
         res.json({ ok: true });
+    } catch (e) { apiError(res, 500, e.message); }
+});
+
+app.post("/api/sessions/invite", (req, res) => {
+    try {
+        const { sessionId, from } = req.body;
+        if (!sessionId || !from) return apiError(res, 400, "sessionId und from erforderlich.");
+        const db = readDB();
+        if (!db.einladungen) db.einladungen = [];
+        const session = (db.sessions || []).find(s => s.id === sessionId);
+        if (!session) return apiError(res, 404, "Session nicht gefunden.");
+        if (session.creator !== from) return apiError(res, 403, "Keine Berechtigung.");
+
+        const friends = getFriends(db, from);
+        let anzahl = 0;
+        friends.forEach(friendEmail => {
+            const exists = db.einladungen.find(e => e.sessionId === sessionId && e.to === friendEmail);
+            if (!exists) {
+                db.einladungen.push({ sessionId, from, to: friendEmail, timestamp: Date.now() });
+                anzahl++;
+            }
+        });
+        writeDB(db);
+        res.json({ ok: true, anzahl, gesamt: friends.length });
+    } catch (e) { apiError(res, 500, e.message); }
+});
+
+app.get("/api/einladungen", (req, res) => {
+    try {
+        const { email } = req.query;
+        const db = readDB();
+        const eigene = (db.einladungen || []).filter(e => e.to === email);
+        const list = eigene.map(e => {
+            const session = (db.sessions || []).find(s => s.id === e.sessionId);
+            const creatorProfil = session ? db.profiles.find(p => p.email === session.creator) : null;
+            return session ? { ...session, creatorName: creatorProfil?.name || session.creator } : null;
+        }).filter(Boolean);
+        res.json(list);
     } catch (e) { apiError(res, 500, e.message); }
 });
 
@@ -239,7 +333,6 @@ app.use("/api/*", (req, res) => {
     apiError(res, 404, "API-Route nicht gefunden: " + req.path);
 });
 
-// ── Start ─────────────────────────────────────────────────────────
 app.listen(PORT, () => {
     console.log(`\n✓ StudyBuddy läuft auf http://localhost:${PORT}\n`);
 });
